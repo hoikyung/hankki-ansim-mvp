@@ -91,6 +91,33 @@
     }
     .secondary { color: var(--green); background: #edf3ec; }
     .hero .primary { padding: 0 28px; }
+    .hero-promise { margin: 14px 0 0; color: var(--muted); font-size: 13px; font-weight: 700; }
+    .hero-highlight { color: var(--green); }
+
+    .feature-showcase {
+      position: relative; padding: 30px;
+      color: white; background: linear-gradient(150deg, #183f34 0%, #2f6b57 68%, #477b65 100%);
+      border-radius: 34px 34px 12px 34px; box-shadow: 0 28px 70px rgba(27, 65, 53, .25); overflow: hidden;
+    }
+    .feature-showcase::before {
+      content: ''; position: absolute; width: 230px; height: 230px; top: -110px; right: -85px;
+      border: 42px solid rgba(255,255,255,.06); border-radius: 50%;
+    }
+    .showcase-kicker { position: relative; margin: 0 0 5px; color: #d8e8df; font-size: 13px; font-weight: 800; }
+    .showcase-title { position: relative; margin: 0; color: white; font-size: 25px; letter-spacing: -.04em; }
+    .feature-flow { position: relative; display: grid; gap: 12px; margin-top: 24px; }
+    .feature-row {
+      display: grid; grid-template-columns: 48px 1fr auto; gap: 13px; align-items: center;
+      padding: 16px; color: var(--ink); background: rgba(255,255,255,.95); border: 1px solid rgba(255,255,255,.5);
+      border-radius: 18px; box-shadow: 0 10px 25px rgba(19, 48, 39, .13);
+    }
+    .feature-icon { display: grid; place-items: center; width: 48px; height: 48px; background: var(--peach-soft); border-radius: 14px; font-size: 24px; }
+    .feature-row:nth-child(2) .feature-icon { background: #e7efde; }
+    .feature-row:nth-child(3) .feature-icon { background: #fff5cf; }
+    .feature-copy strong { display: block; font-size: 16px; }
+    .feature-copy small { display: block; color: var(--muted); line-height: 1.4; }
+    .feature-number { color: var(--green); font-size: 13px; font-weight: 850; }
+    .showcase-footer { position: relative; margin: 17px 2px 0; color: #e2eee7; font-size: 13px; font-weight: 700; text-align: center; }
 
     .illustration {
       position: relative; min-height: 470px; padding: 46px;
@@ -217,6 +244,15 @@
       .hero-copy { text-align: center; }
       .lead { margin-inline: auto; }
       .illustration { min-height: 330px; border-radius: 34% 34% 16% 18%; }
+      .feature-showcase { padding: 17px 13px; border-radius: 24px 24px 8px 24px; }
+      .showcase-kicker, .showcase-footer { display: none; }
+      .showcase-title { font-size: 18px; text-align: center; }
+      .feature-flow { grid-template-columns: repeat(3, 1fr); gap: 7px; margin-top: 13px; }
+      .feature-row { display: flex; min-width: 0; padding: 10px 5px; flex-direction: column; gap: 5px; text-align: center; }
+      .feature-icon { width: 38px; height: 38px; font-size: 20px; }
+      .feature-copy strong { font-size: 12px; line-height: 1.35; }
+      .feature-copy small { display: none; }
+      .feature-number { display: none; }
       .plate { inset: 42px 34px 40px; }
       .food { width: 42px; height: 42px; }
       .note { right: 12px; bottom: 12px; width: 168px; padding: 13px; font-size: 14px; }
@@ -257,19 +293,33 @@
       <section class="view active" id="homeView" aria-labelledby="homeTitle">
         <div class="hero">
           <div class="hero-copy">
-            <span class="eyebrow">복합질환 환자의 보호자를 위해</span>
-            <h1 id="homeTitle">조심할 재료부터<br>장보기까지 한 번에.</h1>
-            <p class="lead">피해야 할 식재료는 빼고, 환자 입맛에 맞는 식단을 골라 유기농 장보기 목록까지 간단히 만들어 보세요.</p>
+            <span class="eyebrow">식단 준비가 복잡한 보호자를 위해</span>
+            <h1 id="homeTitle"><span class="hero-highlight">제한은 지키고,</span><br>입맛은 살리고,<br>장보기는 가볍게.</h1>
+            <p class="lead">의료진에게 안내받은 제한 재료를 한 번 적으면, 환자 입맛에 맞는 식단부터 유기농 장보기 목록까지 이어서 준비해 드려요.</p>
             <button class="primary" type="button" data-go="checklistView">우리 집 식단 준비 시작하기</button>
+            <p class="hero-promise">회원가입 없이 바로 시작 · 의료진의 안내를 보호자가 직접 기록</p>
           </div>
-          <div class="illustration" aria-hidden="true">
-            <div class="plate">
-              <span class="food one"></span><span class="food two"></span><span class="food three"></span>
-              <div class="plate-center">
-                <svg viewBox="0 0 48 48" fill="none"><path d="M24 42s14-7.6 14-20V11.5L24 6 10 11.5V22c0 12.4 14 20 14 20Z" stroke="currentColor" stroke-width="3"/><path d="m18 24 4 4 8-10" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="feature-showcase" aria-label="한끼안심의 세 가지 핵심 기능">
+            <p class="showcase-kicker">한 번에 이어지는 식사 준비</p>
+            <h2 class="showcase-title">오늘 식단, 이렇게 준비해요</h2>
+            <div class="feature-flow">
+              <div class="feature-row">
+                <span class="feature-icon" aria-hidden="true">🛡️</span>
+                <span class="feature-copy"><strong>제한 식재료 체크</strong><small>의료진이 알려 준 재료를 잊지 않게</small></span>
+                <span class="feature-number">01</span>
+              </div>
+              <div class="feature-row">
+                <span class="feature-icon" aria-hidden="true">🥗</span>
+                <span class="feature-copy"><strong>입맛 맞춤 식단 추천</strong><small>제한 재료는 빼고 좋아하는 맛으로</small></span>
+                <span class="feature-number">02</span>
+              </div>
+              <div class="feature-row">
+                <span class="feature-icon" aria-hidden="true">🧺</span>
+                <span class="feature-copy"><strong>유기농 장보기 목록</strong><small>필요한 재료만 모아 바로 찾아보기</small></span>
+                <span class="feature-number">03</span>
               </div>
             </div>
-            <div class="note">오늘 저녁 전 확인하기<small>자몽 · 약사님 안내</small></div>
+            <p class="showcase-footer">기록 → 추천 → 장보기, 한 흐름으로 끝내세요.</p>
           </div>
         </div>
       </section>
