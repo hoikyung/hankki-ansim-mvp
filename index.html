@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="복합질환 환자를 돌보는 보호자를 위한 제한 식재료 체크리스트">
-  <title>한끼안심 — 우리 집 제한 식재료 체크</title>
+  <meta name="description" content="복합질환 환자를 돌보는 보호자를 위한 제한 식재료, 맞춤 식단, 유기농 장보기 도우미">
+  <title>한끼안심 — 제한 식재료부터 장보기까지</title>
   <style>
     :root {
       --ink: #18332d;
@@ -166,6 +166,35 @@
     }
     .next-step { display: flex; justify-content: flex-end; margin-top: 22px; }
 
+    .panel.wide { width: min(100%, 940px); }
+    .choice-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 10px 0 22px; }
+    .choice { position: relative; }
+    .choice input { position: absolute; opacity: 0; pointer-events: none; }
+    .choice label {
+      display: grid; place-items: center; min-height: 82px; margin: 0; padding: 12px;
+      color: var(--green-dark); background: #f5f7f2; border: 1.5px solid var(--line);
+      border-radius: 16px; text-align: center; cursor: pointer; transition: .2s ease;
+    }
+    .choice label span { display: block; font-size: 23px; }
+    .choice input:checked + label { background: var(--sage); border-color: var(--green); box-shadow: 0 7px 18px rgba(47, 107, 87, .12); }
+    .choice input:focus-visible + label { outline: 3px solid rgba(243, 201, 168, .9); outline-offset: 3px; }
+    .meal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 16px; }
+    .meal-card { display: flex; flex-direction: column; padding: 20px; background: #fff; border: 1px solid var(--line); border-radius: 20px; }
+    .meal-card .meal-icon { display: grid; place-items: center; width: 46px; height: 46px; margin-bottom: 14px; background: var(--peach-soft); border-radius: 14px; font-size: 24px; }
+    .meal-card p { flex: 1; margin: 7px 0 14px; color: var(--muted); font-size: 14px; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+    .tag { padding: 4px 8px; color: var(--green-dark); background: #edf3ec; border-radius: 999px; font-size: 12px; font-weight: 750; }
+    .meal-card .secondary { min-height: 44px; width: 100%; }
+    .recommendation-result[hidden] { display: none; }
+    .selected-meal { margin-bottom: 22px; padding: 20px; color: var(--green-dark); background: var(--sage); border-radius: 18px; }
+    .selected-meal p { margin: 4px 0 0; color: #53675f; }
+    .shopping-list { display: grid; gap: 9px; margin-top: 16px; }
+    .shopping-item { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; padding: 14px 15px; border: 1px solid var(--line); border-radius: 14px; background: #fff; }
+    .shopping-item input { width: 20px; height: 20px; accent-color: var(--green); }
+    .shopping-item.done .shopping-name { color: var(--muted); text-decoration: line-through; }
+    .shop-link { padding: 7px 10px; color: var(--green); background: #edf3ec; border-radius: 9px; font-size: 13px; font-weight: 800; text-decoration: none; }
+    .small-note { margin: 14px 0 0; color: var(--muted); font-size: 13px; }
+
     .signup-card { text-align: center; }
     .signup-card .eyebrow { margin-inline: auto; }
     .signup-card .lead { margin-inline: auto; }
@@ -198,6 +227,10 @@
       .item { grid-template-columns: 1fr; }
       .item-actions { justify-content: flex-start; }
       .next-step .primary { width: 100%; }
+      .choice-grid { grid-template-columns: repeat(2, 1fr); }
+      .meal-grid { grid-template-columns: 1fr; }
+      .shopping-item { grid-template-columns: auto 1fr; }
+      .shop-link { grid-column: 2; justify-self: start; }
     }
 
     @media (max-width: 390px) {
@@ -217,7 +250,7 @@
         </span>
         <span>한끼안심</span>
       </div>
-      <div class="step-chip" id="stepChip">보호자를 위한 식사 메모</div>
+      <div class="step-chip" id="stepChip">보호자를 위한 식사 준비</div>
     </header>
 
     <main>
@@ -225,9 +258,9 @@
         <div class="hero">
           <div class="hero-copy">
             <span class="eyebrow">복합질환 환자의 보호자를 위해</span>
-            <h1 id="homeTitle">조심해야 할 음식,<br>이제 한곳에 적어 두세요.</h1>
-            <p class="lead">약 때문에 피해야 하는 식재료를 식사 준비할 때마다 헷갈리지 않도록 간단한 목록으로 챙겨 드려요.</p>
-            <button class="primary" type="button" data-go="checklistView">우리 집 제한 식재료 적기</button>
+            <h1 id="homeTitle">조심할 재료부터<br>장보기까지 한 번에.</h1>
+            <p class="lead">피해야 할 식재료는 빼고, 환자 입맛에 맞는 식단을 골라 유기농 장보기 목록까지 간단히 만들어 보세요.</p>
+            <button class="primary" type="button" data-go="checklistView">우리 집 식단 준비 시작하기</button>
           </div>
           <div class="illustration" aria-hidden="true">
             <div class="plate">
@@ -278,7 +311,66 @@
           </div>
 
           <p class="safety"><span aria-hidden="true">※</span><span>약과 음식에 관한 판단은 담당 의사·약사의 안내를 먼저 따라 주세요.</span></p>
-          <div class="next-step"><button class="primary" type="button" data-go="signupView">정식 버전 소식 받기</button></div>
+          <div class="next-step"><button class="primary" type="button" data-go="tasteView">입맛에 맞는 식단 찾기</button></div>
+        </div>
+      </section>
+
+      <section class="view" id="tasteView" aria-labelledby="tasteTitle">
+        <div class="panel wide">
+          <div class="intro">
+            <span class="eyebrow">입맛을 반영한 식단 후보</span>
+            <h2 id="tasteTitle">요즘 어떤 음식이 당기시나요?</h2>
+            <p>환자가 좋아하는 맛을 고르면, 적어 둔 제한 식재료가 들어간 후보는 먼저 빼 드려요.</p>
+          </div>
+
+          <form id="tasteForm" novalidate>
+            <label>좋아하는 맛 하나를 골라 주세요.</label>
+            <div class="choice-grid">
+              <div class="choice"><input type="radio" name="taste" id="taste-light" value="담백한"><label for="taste-light"><span>🥬</span>담백한 맛</label></div>
+              <div class="choice"><input type="radio" name="taste" id="taste-savory" value="고소한"><label for="taste-savory"><span>🥜</span>고소한 맛</label></div>
+              <div class="choice"><input type="radio" name="taste" id="taste-deep" value="구수한"><label for="taste-deep"><span>🍲</span>구수한 맛</label></div>
+              <div class="choice"><input type="radio" name="taste" id="taste-fresh" value="상큼한"><label for="taste-fresh"><span>🍋</span>상큼한 맛</label></div>
+            </div>
+            <div class="field">
+              <label for="likedIngredients">특히 좋아하는 식재료가 있나요? <span style="font-weight:600;color:var(--muted)">(선택)</span></label>
+              <input id="likedIngredients" maxlength="100" placeholder="예: 두부, 버섯, 닭고기" autocomplete="off">
+              <p class="error" id="tasteError" aria-live="polite"></p>
+            </div>
+            <div class="form-actions">
+              <button class="secondary" type="button" data-go="checklistView">제한 목록으로</button>
+              <button class="primary" type="submit">식단 후보 보기</button>
+            </div>
+          </form>
+
+          <div class="result-area recommendation-result" id="recommendationResult" hidden aria-live="polite">
+            <div class="result-head">
+              <div><h3>오늘 준비하기 좋은 식단이에요</h3><p id="recommendationSummary"></p></div>
+              <span class="count" id="mealCount">0개</span>
+            </div>
+            <div class="meal-grid" id="mealGrid"></div>
+            <p class="safety"><span aria-hidden="true">※</span><span>이 추천은 직접 적은 제한 재료만 제외한 식사 아이디어입니다. 영양·약물 안전성은 담당 의료진에게 확인해 주세요.</span></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" id="shoppingView" aria-labelledby="shoppingTitle">
+        <div class="panel">
+          <div class="intro">
+            <span class="eyebrow">유기농 장보기 목록</span>
+            <h2 id="shoppingTitle">고른 식단에 필요한 재료를 챙겨 보세요.</h2>
+            <p>산 재료는 체크하고, 필요한 재료는 유기농 상품 검색으로 바로 찾아보세요.</p>
+          </div>
+          <div class="selected-meal" id="selectedMeal"></div>
+          <div class="result-head">
+            <div><h3>장보기 목록</h3><p>체크한 내용은 이 화면을 보는 동안 유지돼요.</p></div>
+            <span class="count" id="shoppingCount">0 / 0</span>
+          </div>
+          <div class="shopping-list" id="shoppingList"></div>
+          <p class="small-note">‘유기농 상품 찾기’를 누르면 네이버쇼핑 검색 결과가 새 창에서 열립니다. 실제 재고와 인증 표시는 판매처에서 다시 확인해 주세요.</p>
+          <div class="form-actions" style="margin-top:24px">
+            <button class="secondary" type="button" data-go="tasteView">다른 식단 고르기</button>
+            <button class="primary" type="button" data-go="signupView">정식 버전 소식 받기</button>
+          </div>
         </div>
       </section>
 
@@ -286,8 +378,8 @@
         <div class="panel signup-card">
           <div id="signupContent">
             <span class="eyebrow">정식 버전 미리 알림</span>
-            <h2 id="signupTitle">식단 추천까지 되면<br>알려 드릴까요?</h2>
-            <p class="lead">제한 식재료는 빼고, 환자 입맛에 맞는 식단과 장보기 목록까지 받고 싶다면 연락처를 남겨 주세요.</p>
+            <h2 id="signupTitle">더 많은 맞춤 식단이 나오면<br>알려 드릴까요?</h2>
+            <p class="lead">더 다양한 식단과 장보기 기능을 먼저 써 보고 싶다면 연락처를 남겨 주세요.</p>
             <form class="signup-form" id="signupForm" novalidate>
               <div class="field">
                 <label for="name">보호자님 성함</label>
@@ -303,7 +395,7 @@
                 <p class="error" id="signupError" aria-live="polite"></p>
               </div>
               <div class="form-actions">
-                <button class="secondary" type="button" data-go="checklistView">목록으로 돌아가기</button>
+                <button class="secondary" type="button" data-go="shoppingView">장보기로 돌아가기</button>
                 <button class="primary" type="submit">정식 버전 소식 받기</button>
               </div>
             </form>
@@ -327,12 +419,24 @@
     const views = [...document.querySelectorAll('.view')];
     const stepChip = document.getElementById('stepChip');
     const labels = {
-      homeView: '보호자를 위한 식사 메모',
-      checklistView: '1 / 2  제한 식재료 정리',
-      signupView: '2 / 2  정식 버전 신청'
+      homeView: '보호자를 위한 식사 준비',
+      checklistView: '1 / 4  제한 식재료 정리',
+      tasteView: '2 / 4  입맛 맞춤 식단',
+      shoppingView: '3 / 4  유기농 장보기',
+      signupView: '4 / 4  정식 버전 신청'
     };
     let items = [];
     let editingId = null;
+    let selectedMealId = null;
+    let purchasedIngredients = new Set();
+    const mealCatalog = [
+      { id: 'chicken-rice', icon: '🍚', name: '닭안심 버섯덮밥', tastes: ['담백한', '구수한'], description: '부드러운 닭안심과 채소를 한 그릇에 담은 식단', ingredients: ['현미밥', '닭안심', '표고버섯', '양파', '애호박'] },
+      { id: 'tofu-bibim', icon: '🥗', name: '두부 채소 비빔밥', tastes: ['고소한', '담백한'], description: '두부와 여러 채소를 골고루 올린 든든한 한 그릇', ingredients: ['현미밥', '두부', '시금치', '당근', '오이', '들깨가루'] },
+      { id: 'salmon-salad', icon: '🐟', name: '연어구이 보리샐러드', tastes: ['상큼한', '담백한'], description: '구운 연어에 상큼한 채소와 보리를 곁들인 식단', ingredients: ['연어', '보리', '양상추', '방울토마토', '레몬'] },
+      { id: 'beef-soup', icon: '🍲', name: '소고기 무국과 잡곡밥', tastes: ['구수한', '담백한'], description: '따뜻한 무국과 잡곡밥으로 차린 익숙한 집밥', ingredients: ['소고기', '무', '대파', '마늘', '잡곡밥'] },
+      { id: 'perilla-tofu', icon: '🥣', name: '들깨 버섯 두부탕', tastes: ['고소한', '구수한'], description: '들깨 향과 부드러운 두부가 어우러진 따뜻한 탕', ingredients: ['두부', '느타리버섯', '들깨가루', '배추', '대파'] },
+      { id: 'chicken-lemon', icon: '🍋', name: '레몬 닭가슴살 채소구이', tastes: ['상큼한', '담백한'], description: '레몬 향을 더한 닭가슴살과 색색 채소 구이', ingredients: ['닭가슴살', '레몬', '파프리카', '브로콜리', '양파'] }
+    ];
 
     function showView(id) {
       views.forEach(view => view.classList.toggle('active', view.id === id));
@@ -407,6 +511,90 @@
         ingredientInput.focus();
       }
       renderItems();
+    });
+
+    const normalizeFood = value => value.toLowerCase().replace(/\s+/g, '');
+
+    document.getElementById('tasteForm').addEventListener('submit', event => {
+      event.preventDefault();
+      const taste = new FormData(event.currentTarget).get('taste');
+      const error = document.getElementById('tasteError');
+      if (!taste) {
+        error.textContent = '환자가 좋아하는 맛을 하나 골라 주세요.';
+        return;
+      }
+      error.textContent = '';
+      const favorites = document.getElementById('likedIngredients').value
+        .split(',').map(value => normalizeFood(value.trim())).filter(Boolean);
+      const restrictions = items.map(item => normalizeFood(item.ingredient));
+      const safeMeals = mealCatalog
+        .filter(meal => !meal.ingredients.some(ingredient => {
+          const food = normalizeFood(ingredient);
+          return restrictions.some(restriction => food.includes(restriction) || restriction.includes(food));
+        }))
+        .map(meal => ({
+          ...meal,
+          score: (meal.tastes.includes(taste) ? 10 : 0) + favorites.filter(favorite =>
+            meal.ingredients.some(ingredient => normalizeFood(ingredient).includes(favorite))
+          ).length * 3
+        }))
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 3);
+
+      renderMeals(safeMeals, taste, restrictions.length);
+    });
+
+    function renderMeals(meals, taste, restrictionCount) {
+      const result = document.getElementById('recommendationResult');
+      const grid = document.getElementById('mealGrid');
+      result.hidden = false;
+      document.getElementById('mealCount').textContent = `${meals.length}개`;
+      document.getElementById('recommendationSummary').textContent = restrictionCount
+        ? `제한 재료 ${restrictionCount}개를 빼고 ${taste} 맛을 먼저 골랐어요.`
+        : `등록된 제한 재료 없이 ${taste} 맛을 먼저 골랐어요.`;
+      if (!meals.length) {
+        grid.innerHTML = '<div class="empty" style="grid-column:1/-1">조건에 맞는 식단이 아직 없어요. 제한 재료를 조금 더 구체적으로 적어 보세요.</div>';
+        return;
+      }
+      grid.innerHTML = meals.map(meal => `
+        <article class="meal-card">
+          <div class="meal-icon" aria-hidden="true">${meal.icon}</div>
+          <h3>${meal.name}</h3>
+          <p>${meal.description}</p>
+          <div class="tag-row">${meal.tastes.map(tasteTag => `<span class="tag">${tasteTag}</span>`).join('')}</div>
+          <button class="secondary" type="button" data-select-meal="${meal.id}">이 식단으로 장보기</button>
+        </article>`).join('');
+      result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    document.getElementById('mealGrid').addEventListener('click', event => {
+      const button = event.target.closest('[data-select-meal]');
+      if (!button) return;
+      selectedMealId = button.dataset.selectMeal;
+      purchasedIngredients = new Set();
+      renderShoppingList();
+      showView('shoppingView');
+    });
+
+    function renderShoppingList() {
+      const meal = mealCatalog.find(entry => entry.id === selectedMealId);
+      if (!meal) return;
+      document.getElementById('selectedMeal').innerHTML = `<h3>${meal.icon} ${meal.name}</h3><p>${meal.description}</p>`;
+      document.getElementById('shoppingList').innerHTML = meal.ingredients.map((ingredient, index) => `
+        <div class="shopping-item ${purchasedIngredients.has(index) ? 'done' : ''}">
+          <input type="checkbox" id="shopping-${index}" data-shopping-index="${index}" ${purchasedIngredients.has(index) ? 'checked' : ''}>
+          <label class="shopping-name" for="shopping-${index}">${ingredient}</label>
+          <a class="shop-link" href="https://search.shopping.naver.com/search/all?query=${encodeURIComponent(`유기농 ${ingredient}`)}" target="_blank" rel="noopener noreferrer">유기농 상품 찾기</a>
+        </div>`).join('');
+      document.getElementById('shoppingCount').textContent = `${purchasedIngredients.size} / ${meal.ingredients.length}`;
+    }
+
+    document.getElementById('shoppingList').addEventListener('change', event => {
+      const checkbox = event.target.closest('[data-shopping-index]');
+      if (!checkbox) return;
+      const index = Number(checkbox.dataset.shoppingIndex);
+      checkbox.checked ? purchasedIngredients.add(index) : purchasedIngredients.delete(index);
+      renderShoppingList();
     });
 
     function escapeHtml(value) {
