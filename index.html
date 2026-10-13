@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="복합질환 환자를 돌보는 보호자를 위한 제한 식재료 체크리스트">
+  <title>한끼안심 — 우리 집 제한 식재료 체크</title>
+  <style>
+    :root {
+      --ink: #18332d;
+      --muted: #62736e;
+      --paper: #fbfaf5;
+      --card: #ffffff;
+      --sage: #dfead9;
+      --green: #2f6b57;
+      --green-dark: #204d3f;
+      --peach: #f3c9a8;
+      --peach-soft: #fff0e2;
+      --line: #dfe5df;
+      --danger: #a6493f;
+      --shadow: 0 20px 60px rgba(44, 72, 61, .10);
+      --radius: 26px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 8% 3%, rgba(243, 201, 168, .38), transparent 25rem),
+        radial-gradient(circle at 92% 35%, rgba(223, 234, 217, .8), transparent 28rem),
+        var(--paper);
+      font-family: Pretendard, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+      line-height: 1.65;
+      word-break: keep-all;
+      overflow-wrap: break-word;
+    }
+
+    button, input, textarea { font: inherit; }
+    button { cursor: pointer; }
+    .shell { width: min(100% - 32px, 1040px); margin: 0 auto; }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 0;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 850; letter-spacing: -.04em; }
+    .brand-mark {
+      display: grid; place-items: center; width: 38px; height: 38px;
+      color: white; background: var(--green); border-radius: 13px 13px 13px 5px;
+    }
+    .step-chip { color: var(--muted); font-size: 14px; font-weight: 700; }
+
+    main { padding: 38px 0 80px; }
+    .view { display: none; animation: enter .45s ease both; }
+    .view.active { display: block; }
+    @keyframes enter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.08fr .92fr;
+      gap: 64px;
+      align-items: center;
+      min-height: 650px;
+    }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      margin-bottom: 18px; padding: 7px 12px;
+      color: var(--green-dark); background: rgba(223, 234, 217, .76);
+      border: 1px solid rgba(47, 107, 87, .14); border-radius: 999px;
+      font-size: 14px; font-weight: 800;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { margin-bottom: 22px; font-size: clamp(40px, 6vw, 68px); line-height: 1.13; letter-spacing: -.065em; }
+    h2 { margin-bottom: 10px; font-size: clamp(30px, 4vw, 44px); line-height: 1.2; letter-spacing: -.05em; }
+    h3 { margin-bottom: 4px; font-size: 19px; letter-spacing: -.025em; }
+    .lead { max-width: 610px; margin-bottom: 32px; color: var(--muted); font-size: clamp(17px, 2vw, 20px); }
+    .primary, .secondary {
+      min-height: 54px; padding: 0 22px; border-radius: 15px; border: 0;
+      font-weight: 800; transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+    .primary { color: white; background: var(--green); box-shadow: 0 12px 28px rgba(47, 107, 87, .22); }
+    .primary:hover { background: var(--green-dark); transform: translateY(-2px); }
+    .primary:disabled { cursor: wait; opacity: .65; transform: none; box-shadow: none; }
+    .primary:focus-visible, .secondary:focus-visible, .text-button:focus-visible, input:focus-visible, textarea:focus-visible {
+      outline: 3px solid rgba(243, 201, 168, .9); outline-offset: 3px;
+    }
+    .secondary { color: var(--green); background: #edf3ec; }
+    .hero .primary { padding: 0 28px; }
+
+    .illustration {
+      position: relative; min-height: 470px; padding: 46px;
+      background: linear-gradient(145deg, #e6efdf, #cadfc7);
+      border: 1px solid rgba(47, 107, 87, .12); border-radius: 46% 46% 18% 22%;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .plate {
+      position: absolute; inset: 65px 50px 55px;
+      display: grid; place-items: center; background: #fffdfa;
+      border: 18px solid rgba(255,255,255,.62); border-radius: 50%;
+      box-shadow: inset 0 0 0 2px #e5e3da, 0 24px 40px rgba(45, 80, 66, .14);
+    }
+    .plate-center {
+      display: grid; place-items: center; width: 48%; aspect-ratio: 1;
+      color: var(--green); background: var(--sage); border-radius: 50%;
+    }
+    .plate-center svg { width: 52%; }
+    .food { position: absolute; width: 58px; height: 58px; border-radius: 50%; box-shadow: 0 8px 14px rgba(55, 75, 60, .12); }
+    .food.one { top: 18%; left: 20%; background: #ee9f73; }
+    .food.two { right: 17%; top: 29%; background: #8fbd75; }
+    .food.three { bottom: 16%; left: 30%; background: #f0d476; }
+    .note {
+      position: absolute; right: 20px; bottom: 22px; width: 190px; padding: 17px;
+      background: #fff; border: 1px solid var(--line); border-radius: 18px;
+      box-shadow: 0 14px 30px rgba(36, 73, 59, .16); font-weight: 750; transform: rotate(-2deg);
+    }
+    .note small { display: block; color: var(--muted); font-weight: 600; }
+
+    .panel {
+      width: min(100%, 760px); margin: 20px auto 0; padding: clamp(24px, 5vw, 48px);
+      background: rgba(255,255,255,.92); border: 1px solid var(--line);
+      border-radius: var(--radius); box-shadow: var(--shadow);
+    }
+    .intro { margin-bottom: 28px; }
+    .intro p { margin-bottom: 0; color: var(--muted); }
+    .field { margin-bottom: 18px; }
+    label { display: block; margin-bottom: 8px; font-weight: 800; }
+    input, textarea {
+      width: 100%; padding: 15px 16px; color: var(--ink); background: #fff;
+      border: 1.5px solid #cad5cf; border-radius: 14px; outline: none;
+    }
+    textarea { min-height: 94px; resize: vertical; }
+    input:focus, textarea:focus { border-color: var(--green); }
+    .form-actions { display: flex; gap: 10px; }
+    .form-actions .primary { flex: 1; }
+    .error { min-height: 25px; margin: 7px 0 0; color: var(--danger); font-size: 14px; font-weight: 700; }
+
+    .result-area { margin-top: 35px; padding-top: 30px; border-top: 1px dashed #cad5cf; }
+    .result-head { display: flex; justify-content: space-between; gap: 16px; align-items: end; margin-bottom: 15px; }
+    .result-head p { margin: 0; color: var(--muted); font-size: 14px; }
+    .count { flex: none; padding: 5px 10px; background: var(--peach-soft); border-radius: 99px; font-size: 13px; font-weight: 800; }
+    .empty {
+      padding: 25px; color: var(--muted); background: #f6f7f3;
+      border: 1px dashed #cbd5cd; border-radius: 16px; text-align: center;
+    }
+    .list { display: grid; gap: 11px; }
+    .item {
+      display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: center;
+      padding: 17px 18px; background: #fff; border: 1px solid var(--line); border-radius: 16px;
+    }
+    .item.checked { background: #f2f6f0; opacity: .72; }
+    .item.checked h3 { text-decoration: line-through; }
+    .item p { margin: 2px 0 0; color: var(--muted); font-size: 15px; }
+    .item-actions { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+    .text-button { padding: 7px 9px; color: var(--green); background: transparent; border: 0; border-radius: 8px; font-size: 13px; font-weight: 800; }
+    .text-button:hover { background: #edf3ec; }
+    .text-button.delete { color: var(--danger); }
+    .safety {
+      display: flex; gap: 10px; align-items: flex-start; margin: 24px 0 0; padding: 14px 16px;
+      color: #5e5d4f; background: #fff8db; border: 1px solid #eadc9c; border-radius: 14px; font-size: 14px;
+    }
+    .next-step { display: flex; justify-content: flex-end; margin-top: 22px; }
+
+    .signup-card { text-align: center; }
+    .signup-card .eyebrow { margin-inline: auto; }
+    .signup-card .lead { margin-inline: auto; }
+    .signup-form { max-width: 500px; margin: 30px auto 0; text-align: left; }
+    .success {
+      display: none; place-items: center; min-height: 360px; text-align: center;
+    }
+    .success.show { display: grid; }
+    .success-icon {
+      display: grid; place-items: center; width: 74px; height: 74px; margin: 0 auto 20px;
+      color: white; background: var(--green); border-radius: 50%; font-size: 36px;
+    }
+    footer { padding: 22px 0 36px; color: var(--muted); text-align: center; font-size: 13px; }
+
+    @media (max-width: 760px) {
+      .shell { width: min(100% - 24px, 1040px); }
+      header { padding: 16px 0; }
+      main { padding: 14px 0 55px; }
+      .hero { grid-template-columns: 1fr; min-height: auto; gap: 34px; padding: 36px 0; }
+      .hero-copy { text-align: center; }
+      .lead { margin-inline: auto; }
+      .illustration { min-height: 330px; border-radius: 34% 34% 16% 18%; }
+      .plate { inset: 42px 34px 40px; }
+      .food { width: 42px; height: 42px; }
+      .note { right: 12px; bottom: 12px; width: 168px; padding: 13px; font-size: 14px; }
+      .panel { margin-top: 10px; border-radius: 22px; }
+      .form-actions { flex-direction: column-reverse; }
+      .form-actions button { width: 100%; }
+      .result-head { align-items: start; }
+      .item { grid-template-columns: 1fr; }
+      .item-actions { justify-content: flex-start; }
+      .next-step .primary { width: 100%; }
+    }
+
+    @media (max-width: 390px) {
+      h1 { font-size: 38px; }
+      .step-chip { font-size: 12px; }
+      .illustration { min-height: 290px; }
+      .plate { inset: 36px 28px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="brand" aria-label="한끼안심">
+        <span class="brand-mark" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 21s7-3.8 7-10V5.8L12 3 5 5.8V11c0 6.2 7 10 7 10Z" stroke="currentColor" stroke-width="2"/><path d="m9 12 2 2 4-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span>한끼안심</span>
+      </div>
+      <div class="step-chip" id="stepChip">보호자를 위한 식사 메모</div>
+    </header>
+
+    <main>
+      <section class="view active" id="homeView" aria-labelledby="homeTitle">
+        <div class="hero">
+          <div class="hero-copy">
+            <span class="eyebrow">복합질환 환자의 보호자를 위해</span>
+            <h1 id="homeTitle">조심해야 할 음식,<br>이제 한곳에 적어 두세요.</h1>
+            <p class="lead">약 때문에 피해야 하는 식재료를 식사 준비할 때마다 헷갈리지 않도록 간단한 목록으로 챙겨 드려요.</p>
+            <button class="primary" type="button" data-go="checklistView">우리 집 제한 식재료 적기</button>
+          </div>
+          <div class="illustration" aria-hidden="true">
+            <div class="plate">
+              <span class="food one"></span><span class="food two"></span><span class="food three"></span>
+              <div class="plate-center">
+                <svg viewBox="0 0 48 48" fill="none"><path d="M24 42s14-7.6 14-20V11.5L24 6 10 11.5V22c0 12.4 14 20 14 20Z" stroke="currentColor" stroke-width="3"/><path d="m18 24 4 4 8-10" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+            <div class="note">오늘 저녁 전 확인하기<small>자몽 · 약사님 안내</small></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" id="checklistView" aria-labelledby="checklistTitle">
+        <div class="panel">
+          <div class="intro">
+            <span class="eyebrow">우리 집 식사 전 체크</span>
+            <h2 id="checklistTitle">먹지 말라고 안내받은 식재료를 적어 주세요.</h2>
+            <p>의사나 약사에게 들은 내용을 기억하기 쉽게 남겨 두세요.</p>
+          </div>
+
+          <form id="restrictionForm" novalidate>
+            <div class="field">
+              <label for="ingredient">피해야 하는 식재료가 무엇인가요?</label>
+              <input id="ingredient" name="ingredient" maxlength="40" placeholder="예: 자몽" autocomplete="off" required>
+            </div>
+            <div class="field">
+              <label for="reason">왜 피해야 하나요?</label>
+              <textarea id="reason" name="reason" maxlength="120" placeholder="예: 복용 중인 약 때문에 약사님이 피하라고 했어요." required></textarea>
+              <p class="error" id="formError" aria-live="polite"></p>
+            </div>
+            <div class="form-actions">
+              <button class="secondary" type="button" data-go="homeView">처음으로</button>
+              <button class="primary" id="submitRestriction" type="submit">목록에 넣기</button>
+            </div>
+          </form>
+
+          <div class="result-area" aria-live="polite">
+            <div class="result-head">
+              <div>
+                <h3>우리 집 제한 식재료 목록</h3>
+                <p>식사 준비 전에 하나씩 확인해 보세요.</p>
+              </div>
+              <span class="count" id="itemCount">0개</span>
+            </div>
+            <div class="empty" id="emptyState">아직 적어 둔 식재료가 없어요.</div>
+            <div class="list" id="restrictionList"></div>
+          </div>
+
+          <p class="safety"><span aria-hidden="true">※</span><span>약과 음식에 관한 판단은 담당 의사·약사의 안내를 먼저 따라 주세요.</span></p>
+          <div class="next-step"><button class="primary" type="button" data-go="signupView">정식 버전 소식 받기</button></div>
+        </div>
+      </section>
+
+      <section class="view" id="signupView" aria-labelledby="signupTitle">
+        <div class="panel signup-card">
+          <div id="signupContent">
+            <span class="eyebrow">정식 버전 미리 알림</span>
+            <h2 id="signupTitle">식단 추천까지 되면<br>알려 드릴까요?</h2>
+            <p class="lead">제한 식재료는 빼고, 환자 입맛에 맞는 식단과 장보기 목록까지 받고 싶다면 연락처를 남겨 주세요.</p>
+            <form class="signup-form" id="signupForm" novalidate>
+              <div class="field">
+                <label for="name">보호자님 성함</label>
+                <input id="name" name="name" placeholder="예: 김보호" autocomplete="name" required>
+              </div>
+              <div class="field">
+                <label for="contact">연락받을 휴대전화 번호 또는 이메일</label>
+                <input id="contact" name="contact" placeholder="010-0000-0000 또는 이메일" autocomplete="email" required>
+              </div>
+              <div class="field">
+                <label for="message">남기실 말</label>
+                <textarea id="message" name="message" maxlength="500" placeholder="환자 식사를 준비하면서 가장 필요한 점을 들려주세요." required></textarea>
+                <p class="error" id="signupError" aria-live="polite"></p>
+              </div>
+              <div class="form-actions">
+                <button class="secondary" type="button" data-go="checklistView">목록으로 돌아가기</button>
+                <button class="primary" type="submit">정식 버전 소식 받기</button>
+              </div>
+            </form>
+          </div>
+          <div class="success" id="successState" role="status">
+            <div>
+              <div class="success-icon" aria-hidden="true">✓</div>
+              <h2>신청됐습니다</h2>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>한끼안심 MVP · 의료진의 복약 및 식이 지침을 우선해 주세요.</footer>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://kwvzozwauxirjpdicmcc.supabase.co';
+    const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_77pq6FuPrA6hGEeYjKg5EQ_nkksZzvX';
+    const views = [...document.querySelectorAll('.view')];
+    const stepChip = document.getElementById('stepChip');
+    const labels = {
+      homeView: '보호자를 위한 식사 메모',
+      checklistView: '1 / 2  제한 식재료 정리',
+      signupView: '2 / 2  정식 버전 신청'
+    };
+    let items = [];
+    let editingId = null;
+
+    function showView(id) {
+      views.forEach(view => view.classList.toggle('active', view.id === id));
+      stepChip.textContent = labels[id];
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (id === 'checklistView') setTimeout(() => document.getElementById('ingredient').focus(), 250);
+    }
+
+    document.addEventListener('click', event => {
+      const navigation = event.target.closest('[data-go]');
+      if (navigation) showView(navigation.dataset.go);
+    });
+
+    const restrictionForm = document.getElementById('restrictionForm');
+    const ingredientInput = document.getElementById('ingredient');
+    const reasonInput = document.getElementById('reason');
+    const formError = document.getElementById('formError');
+    const submitRestriction = document.getElementById('submitRestriction');
+
+    restrictionForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const ingredient = ingredientInput.value.trim();
+      const reason = reasonInput.value.trim();
+      if (!ingredient || !reason) {
+        formError.textContent = '식재료와 이유를 모두 적어 주세요.';
+        (!ingredient ? ingredientInput : reasonInput).focus();
+        return;
+      }
+      formError.textContent = '';
+      if (editingId) {
+        const item = items.find(entry => entry.id === editingId);
+        item.ingredient = ingredient;
+        item.reason = reason;
+        editingId = null;
+        submitRestriction.textContent = '목록에 넣기';
+      } else {
+        items.unshift({ id: Date.now(), ingredient, reason, checked: false });
+      }
+      restrictionForm.reset();
+      renderItems();
+      ingredientInput.focus();
+    });
+
+    function renderItems() {
+      const list = document.getElementById('restrictionList');
+      const empty = document.getElementById('emptyState');
+      document.getElementById('itemCount').textContent = `${items.length}개`;
+      empty.hidden = items.length > 0;
+      list.innerHTML = items.map(item => `
+        <article class="item ${item.checked ? 'checked' : ''}">
+          <div><h3>${escapeHtml(item.ingredient)}</h3><p>${escapeHtml(item.reason)}</p></div>
+          <div class="item-actions">
+            <button class="text-button" type="button" data-action="check" data-id="${item.id}">${item.checked ? '다시 보기' : '확인했어요'}</button>
+            <button class="text-button" type="button" data-action="edit" data-id="${item.id}">고치기</button>
+            <button class="text-button delete" type="button" data-action="delete" data-id="${item.id}">지우기</button>
+          </div>
+        </article>`).join('');
+    }
+
+    document.getElementById('restrictionList').addEventListener('click', event => {
+      const button = event.target.closest('[data-action]');
+      if (!button) return;
+      const id = Number(button.dataset.id);
+      const item = items.find(entry => entry.id === id);
+      if (button.dataset.action === 'check') item.checked = !item.checked;
+      if (button.dataset.action === 'delete') items = items.filter(entry => entry.id !== id);
+      if (button.dataset.action === 'edit') {
+        ingredientInput.value = item.ingredient;
+        reasonInput.value = item.reason;
+        editingId = id;
+        submitRestriction.textContent = '고친 내용 저장하기';
+        ingredientInput.focus();
+      }
+      renderItems();
+    });
+
+    function escapeHtml(value) {
+      return value.replace(/[&<>'"]/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[character]);
+    }
+
+    document.getElementById('signupForm').addEventListener('submit', async event => {
+      event.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const contact = document.getElementById('contact').value.trim();
+      const message = document.getElementById('message').value.trim();
+      const error = document.getElementById('signupError');
+      const submitButton = event.submitter;
+      if (!name || !contact || !message) {
+        error.textContent = '성함, 연락처, 남기실 말을 모두 적어 주세요.';
+        return;
+      }
+      error.textContent = '';
+      submitButton.disabled = true;
+      submitButton.textContent = '신청 중이에요…';
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/applications`, {
+          method: 'POST',
+          headers: {
+            apikey: SUPABASE_PUBLISHABLE_KEY,
+            Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+            'Content-Type': 'application/json',
+            Prefer: 'return=minimal'
+          },
+          body: JSON.stringify({ name, contact, message })
+        });
+        if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+        document.getElementById('signupContent').hidden = true;
+        document.getElementById('successState').classList.add('show');
+      } catch (requestError) {
+        error.textContent = '지금은 신청을 보내지 못했어요. 잠시 뒤 다시 눌러 주세요.';
+        submitButton.disabled = false;
+        submitButton.textContent = '정식 버전 소식 받기';
+        console.error(requestError);
+      }
+    });
+  </script>
+</body>
+</html>
